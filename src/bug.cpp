@@ -6,14 +6,14 @@
 
 namespace simulation
 {
-  Bug::Bug(std::shared_ptr<MapCell> cell, const bool is_predator) : _cell(cell), _is_prey(!is_predator) {}
+  Bug::Bug(std::shared_ptr<MapCell> cell, const bool is_predator) : cell_(cell), is_prey_(!is_predator) {}
 
   bool Bug::is_dead() const {
-    return !_is_alive;
+    return !is_alive_;
   }
 
   bool Bug::is_prey() const {
-    return _is_prey;
+    return is_prey_;
   }
 
   void Bug::play_round() const {
@@ -21,8 +21,8 @@ namespace simulation
   }
 
   void Bug::get_eaten() {
-    _is_alive = false;
-    notify_death(_cell->get_bug());
+    is_alive_ = false;
+    notify_death(cell_->get_bug());
   }
 
   uint8_t Bug::get_rounds_to_breed() const {
@@ -34,26 +34,25 @@ namespace simulation
   }
 
   void Bug::reset_starve_counter() {
-    _starve_counter = get_rounds_to_starve();
+    starve_counter_ = get_rounds_to_starve();
   }
 
   void Bug::reset_breed_counter() {
-    _breed_counter = get_rounds_to_breed();
+    breed_counter_ = get_rounds_to_breed();
   }
 
   void Bug::increase_lifecycle_counters() {
-    _breed_counter++;
-    _starve_counter++;
+    breed_counter_++;
+    starve_counter_++;
   }
 
   void Bug::eat_move() {
-    for(auto adyacent : _cell->get_adyacents()) {
-      if(adyacent && adyacent->get_bug() && adyacent->get_bug()->is_prey()) {
-        notify_death(adyacent->get_bug());
+    for(auto adjacent : cell_->get_adjacents()) {
+      if(adjacent && adjacent->get_bug() && adjacent->get_bug()->is_prey()) {
+        notify_death(adjacent->get_bug());
         reset_starve_counter();
-        adyacent->set_bug(_cell->get_bug());
-        _cell->set_bug(nullptr);
-        _cell = adyacent;
+        cell_->move_bug(adjacent);
+        cell_ = adjacent;
         return;        
       }
     }
@@ -61,25 +60,24 @@ namespace simulation
   }
 
   void Bug::move() {
-    auto free_adyacent = _cell->get_free_adyacent();
-    if(!free_adyacent) {
+    auto free_adjacent = cell_->get_free_adjacent();
+    if(!free_adjacent) {
       return;
     }
-    free_adyacent->set_bug(_cell->get_bug());
-    _cell->set_bug(nullptr);
-    _cell = free_adyacent;
+    cell_->move_bug(free_adjacent);
+    cell_ = free_adjacent;
   }
 
   void Bug::breed() {
-    if(_breed_counter < get_rounds_to_breed()) {
+    if(breed_counter_ < get_rounds_to_breed()) {
       return;
     }
-    auto free_adyacent = _cell->get_free_adyacent();
-    if(!free_adyacent) {
+    auto free_adjacent = cell_->get_free_adjacent();
+    if(!free_adjacent) {
       return;
     }
-    std::shared_ptr<Bug> newborn_bug = std::make_shared<Bug>(free_adyacent);
-    free_adyacent->set_bug(newborn_bug);
+    std::shared_ptr<Bug> newborn_bug = std::make_shared<Bug>(free_adjacent);
+    free_adjacent->set_bug(newborn_bug);
     notify_birth(newborn_bug);
   }
 

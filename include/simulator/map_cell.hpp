@@ -7,33 +7,41 @@ namespace simulation {
 
 class Bug; // Forward declaration.
 
-/* Number of adyacent cells a single cell has. */
-constexpr uint8_t ADYACENT_CELLS = 4; // Up, Right, Left, Down.
+/* Number of adjacent cells a single cell has. */
+constexpr uint8_t ADJACENT_CELLS = 4; // Up, Right, Left, Down.
 
 /** Represents a cell of a `bug world` Map. */
 class MapCell {
  private:
-  std::shared_ptr<Bug> _bug;
-  std::array<const std::shared_ptr<MapCell>, ADYACENT_CELLS> _adyacent_cells;
+  std::shared_ptr<Bug> bug_;
+  std::array<const std::shared_ptr<MapCell>, ADJACENT_CELLS> adjacent_cells_;
 
  public:
-  /** Helper class to hold adyacent cells references of a single cell. 
-   * Pointers contained by this class may be null, which means that there's no adyacent cell in that direction.
+  /** Helper class to hold adjacent cells references of a single cell. 
+   * Pointers contained by this class may be null, which means that there's no adjacent cell in that direction.
    */
-  struct AdyacentCellsReference {
-    std::shared_ptr<MapCell> up;
-    std::shared_ptr<MapCell> down;
-    std::shared_ptr<MapCell> left;
-    std::shared_ptr<MapCell> right;
+  struct AdjacentCellsReference {
+    std::shared_ptr<MapCell> up = nullptr;
+    std::shared_ptr<MapCell> down = nullptr;
+    std::shared_ptr<MapCell> left = nullptr;
+    std::shared_ptr<MapCell> right = nullptr;
+
+    AdjacentCellsReference(
+      const std::shared_ptr<MapCell> up, 
+      const std::shared_ptr<MapCell> down, 
+      const std::shared_ptr<MapCell> left,
+      const std::shared_ptr<MapCell> right);
+  
+    AdjacentCellsReference(const AdjacentCellsReference& adjacent_cells_reference);
   };
 
   /** Constructs a cell for the simulation map
    * @param bug reference to the bug contained by this cell. Can be empty.
-   * @param adyacent_cells references to adyacent cells.
+   * @param adjacent_cells references to adjacent cells.
    */
-  MapCell(const std::shared_ptr<Bug> bug, const AdyacentCellsReference& adyacent_cells);
+  MapCell(const std::shared_ptr<Bug> bug, const AdjacentCellsReference& adjacent_cells);
 
-  /** Constructs a cell for the simulation map, with empty adyacent references.
+  /** Constructs a cell for the simulation map, with empty adjacent references.
    * @param bug reference to the bug contained by this cell. Can be empty.
    */
   MapCell(const std::shared_ptr<Bug> bug);
@@ -52,11 +60,20 @@ class MapCell {
    */
   void set_bug(const std::shared_ptr<Bug> bug);
 
-  /** Gets an array of adyacent cells to this cell. */
-  const std::array<const std::shared_ptr<MapCell>, ADYACENT_CELLS>& get_adyacents() const;
+  /** Moves the bug occupying this cell to another one. 
+   * 
+   * <p> This method replaces destination's bug for the one held by this class' instance. 
+   *     In other words, if destination's bug reference is not empty, the caller must take into account
+   *     that the bug reference held in destination will get lost.
+   * <p> This cell's bug reference is always set to `nullptr` after the bug is moved.
+  */
+  void move_bug(const std::shared_ptr<MapCell> destination);
 
-  /** Gets a free adyacent cell if any. */
-  const std::shared_ptr<MapCell> get_free_adyacent() const;
+  /** Gets an array of adjacent cells to this cell. */
+  const std::array<const std::shared_ptr<MapCell>, ADJACENT_CELLS>& get_adjacents() const;
+
+  /** Gets a free adjacent cell if any. */
+  const std::shared_ptr<MapCell> get_free_adjacent() const;
 
 };
 

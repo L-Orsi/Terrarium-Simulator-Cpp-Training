@@ -10,7 +10,7 @@ namespace simulation {
 SimulationMap::SimulationMap() {}
 
 std::array<const std::shared_ptr<MapCell>, CELLS_TOTAL>& SimulationMap::get_cells() {
-  return _cells;
+  return cells_;
 }
 
 } // namespace: simulation

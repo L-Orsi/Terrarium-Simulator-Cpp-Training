@@ -17,7 +17,7 @@ class Bug;  // Forward declaration.
  */
 class BugNotifier {
  private:
-  std::set<std::shared_ptr<BugObserver>> _observers;
+  std::set<std::shared_ptr<BugObserver>> observers_;
 
  public:
   /** Creates an instance of a bug notifier. */

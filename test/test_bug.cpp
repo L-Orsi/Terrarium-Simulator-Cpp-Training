@@ -25,7 +25,7 @@ TEST(Bug, Move_SuccessfullyMovesToEmpty) {
   std::shared_ptr<simulation::Bug> non_empty_bug_1(std::make_shared<simulation::Bug>(nullptr));
   std::shared_ptr<simulation::Bug> non_empty_bug_2(std::make_shared<simulation::Bug>(nullptr));
   
-  simulation::MapCell::AdyacentCellsReference cells_refs = {
+  simulation::MapCell::AdjacentCellsReference cells_refs = {
       std::make_shared<simulation::MapCell>(non_empty_bug_2),
       std::make_shared<simulation::MapCell>(nullptr),
       std::make_shared<simulation::MapCell>(non_empty_bug_1),
@@ -42,11 +42,11 @@ TEST(Bug, Move_SuccessfullyMovesToEmpty) {
   EXPECT_EQ((test_cell_ref->get_bug()), nullptr);
 }
 
-TEST(Bug, Move_NoFreeAdyacent) {  
+TEST(Bug, Move_NoFreeadjacent) {  
   std::shared_ptr<simulation::Bug> non_empty_bug_1(std::make_shared<simulation::Bug>(nullptr));
   std::shared_ptr<simulation::Bug> non_empty_bug_2(std::make_shared<simulation::Bug>(nullptr));
   
-  simulation::MapCell::AdyacentCellsReference cells_refs = {
+  simulation::MapCell::AdjacentCellsReference cells_refs = {
       std::make_shared<simulation::MapCell>(non_empty_bug_2),
       std::make_shared<simulation::MapCell>(non_empty_bug_2),
       std::make_shared<simulation::MapCell>(non_empty_bug_1),
@@ -69,7 +69,7 @@ TEST(Bug, EatMove_Successfull) {
   std::shared_ptr<simulation::Bug> non_empty_bug_1(std::make_shared<simulation::Bug>(nullptr, /*is_predator=*/ false));
   std::shared_ptr<simulation::Bug> non_empty_bug_2(std::make_shared<simulation::Bug>(nullptr, /*is_predator=*/ true));
   
-  simulation::MapCell::AdyacentCellsReference cells_refs = {
+  simulation::MapCell::AdjacentCellsReference cells_refs = {
       std::make_shared<simulation::MapCell>(non_empty_bug_2), // Can't eat! It's a predator.
       std::make_shared<simulation::MapCell>(nullptr),
       std::make_shared<simulation::MapCell>(non_empty_bug_1), // It's a prey! Will eat.
@@ -88,10 +88,10 @@ TEST(Bug, EatMove_Successfull) {
   EXPECT_EQ((std::dynamic_pointer_cast<TestableObserverBug>(testable_observer))->cached_bug, non_empty_bug_1);
 }
 
-TEST(Bug, EatMove_AdyacentsClearSoSimpleMove) {  
+TEST(Bug, EatMove_adjacentsClearSoSimpleMove) {  
   std::shared_ptr<simulation::BugObserver> testable_observer = std::make_shared<TestableObserverBug>();
   
-  simulation::MapCell::AdyacentCellsReference cells_refs = {
+  simulation::MapCell::AdjacentCellsReference cells_refs = {
       std::make_shared<simulation::MapCell>(nullptr),
       std::make_shared<simulation::MapCell>(nullptr),
       std::make_shared<simulation::MapCell>(nullptr),
@@ -110,13 +110,13 @@ TEST(Bug, EatMove_AdyacentsClearSoSimpleMove) {
   EXPECT_EQ((std::dynamic_pointer_cast<TestableObserverBug>(testable_observer))->cached_bug, nullptr);
 }
 
-TEST(Bug, Breed_AdyacentsClearBreedsSuccessfully) {  
+TEST(Bug, Breed_adjacentsClearBreedsSuccessfully) {  
   std::shared_ptr<simulation::BugObserver> testable_observer = std::make_shared<TestableObserverBug>();
 
   std::shared_ptr<simulation::Bug> non_empty_bug_1(std::make_shared<simulation::Bug>(nullptr));
   std::shared_ptr<simulation::Bug> non_empty_bug_2(std::make_shared<simulation::Bug>(nullptr));
   
-  simulation::MapCell::AdyacentCellsReference cells_refs = {
+  simulation::MapCell::AdjacentCellsReference cells_refs = {
       std::make_shared<simulation::MapCell>(non_empty_bug_1),
       std::make_shared<simulation::MapCell>(non_empty_bug_2),
       std::make_shared<simulation::MapCell>(nullptr),
@@ -143,7 +143,7 @@ TEST(Bug, Breed_PostponedDueToOccupiedCells) {
   std::shared_ptr<simulation::Bug> non_empty_bug_1(std::make_shared<simulation::Bug>(nullptr));
   std::shared_ptr<simulation::Bug> non_empty_bug_2(std::make_shared<simulation::Bug>(nullptr));
   
-  simulation::MapCell::AdyacentCellsReference cells_refs = {
+  simulation::MapCell::AdjacentCellsReference cells_refs = {
       std::make_shared<simulation::MapCell>(non_empty_bug_1),
       std::make_shared<simulation::MapCell>(non_empty_bug_2),
       std::make_shared<simulation::MapCell>(non_empty_bug_1),
@@ -167,7 +167,7 @@ TEST(Bug, Breed_PostponedDueToOccupiedCells) {
 TEST(Bug, Breed_DontBreedIfNotReady) {  
   std::shared_ptr<simulation::BugObserver> testable_observer = std::make_shared<TestableObserverBug>();
 
-  simulation::MapCell::AdyacentCellsReference cells_refs = {
+  simulation::MapCell::AdjacentCellsReference cells_refs = {
       std::make_shared<simulation::MapCell>(nullptr),
       std::make_shared<simulation::MapCell>(nullptr),
       std::make_shared<simulation::MapCell>(nullptr),

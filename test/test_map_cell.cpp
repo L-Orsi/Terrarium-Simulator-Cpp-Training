@@ -14,12 +14,12 @@ TEST(MapCell, GetSetBug_SuccessfullyGetsSetsBugReferences) {
   EXPECT_EQ(test_cell.get_bug(), shared);
 }
 
-TEST(MapCell, GetAdyacents_SuccessfullyGetsAdyacents) {
+TEST(MapCell, Getadjacents_SuccessfullyGetsadjacents) {
 
   std::shared_ptr<simulation::Bug> non_empty_bug_1(std::make_shared<simulation::Bug>(nullptr));
   std::shared_ptr<simulation::Bug> non_empty_bug_2(std::make_shared<simulation::Bug>(nullptr));
 
-  simulation::MapCell::AdyacentCellsReference cells_refs = {
+  simulation::MapCell::AdjacentCellsReference cells_refs = {
       std::make_shared<simulation::MapCell>(non_empty_bug_2),
       std::make_shared<simulation::MapCell>(nullptr),
       std::make_shared<simulation::MapCell>(non_empty_bug_1),
@@ -28,7 +28,7 @@ TEST(MapCell, GetAdyacents_SuccessfullyGetsAdyacents) {
   simulation::MapCell test_cell = simulation::MapCell(nullptr, cells_refs);
 
   uint8_t non_empty_bug_count = 0;
-  for(auto cell : test_cell.get_adyacents()) {
+  for(auto cell : test_cell.get_adjacents()) {
       if(cell->get_bug()) {
           non_empty_bug_count++;
       }
@@ -36,12 +36,12 @@ TEST(MapCell, GetAdyacents_SuccessfullyGetsAdyacents) {
   EXPECT_EQ(non_empty_bug_count, 2);
 }
 
-TEST(MapCell, GetFreeAdyacent_SuccessfullyGetsFirstFreeAdyacent) {
+TEST(MapCell, GetFreeadjacent_SuccessfullyGetsFirstFreeadjacent) {
       
   std::shared_ptr<simulation::Bug> non_empty_bug_1(std::make_shared<simulation::Bug>(nullptr));
   std::shared_ptr<simulation::Bug> non_empty_bug_2(std::make_shared<simulation::Bug>(nullptr));
 
-  simulation::MapCell::AdyacentCellsReference cells_refs = {
+  simulation::MapCell::AdjacentCellsReference cells_refs = {
       std::make_shared<simulation::MapCell>(non_empty_bug_2),
       std::make_shared<simulation::MapCell>(nullptr),
       std::make_shared<simulation::MapCell>(non_empty_bug_1),
@@ -49,14 +49,14 @@ TEST(MapCell, GetFreeAdyacent_SuccessfullyGetsFirstFreeAdyacent) {
   };
   simulation::MapCell test_cell = simulation::MapCell(nullptr, cells_refs);
 
-  EXPECT_EQ(test_cell.get_free_adyacent(), cells_refs.down);
+  EXPECT_EQ(test_cell.get_free_adjacent(), cells_refs.down);
 }
 
-TEST(MapCell, GetFreeAdyacent_GetsNullReferenceIfNoneEmpty) {      
+TEST(MapCell, GetFreeadjacent_GetsNullReferenceIfNoneEmpty) {      
   std::shared_ptr<simulation::Bug> non_empty_bug_1(std::make_shared<simulation::Bug>(nullptr));
   std::shared_ptr<simulation::Bug> non_empty_bug_2(std::make_shared<simulation::Bug>(nullptr));
 
-  simulation::MapCell::AdyacentCellsReference cells_refs = {
+  simulation::MapCell::AdjacentCellsReference cells_refs = {
       std::make_shared<simulation::MapCell>(non_empty_bug_2),
       std::make_shared<simulation::MapCell>(non_empty_bug_2),
       std::make_shared<simulation::MapCell>(non_empty_bug_1),
@@ -64,7 +64,23 @@ TEST(MapCell, GetFreeAdyacent_GetsNullReferenceIfNoneEmpty) {
   };
   simulation::MapCell test_cell = simulation::MapCell(nullptr, cells_refs);
 
-  EXPECT_EQ(test_cell.get_free_adyacent(), nullptr);
+  EXPECT_EQ(test_cell.get_free_adjacent(), nullptr);
+}
+
+TEST(MapCell, MoveBug_BugMovedSuccessfully) {
+  std::shared_ptr<simulation::Bug> non_empty_bug_1(std::make_shared<simulation::Bug>(nullptr));
+  std::shared_ptr<simulation::Bug> non_empty_bug_2(std::make_shared<simulation::Bug>(nullptr));
+
+  simulation::MapCell::AdjacentCellsReference cells_refs = {
+      std::make_shared<simulation::MapCell>(non_empty_bug_2),
+      std::make_shared<simulation::MapCell>(nullptr),
+      std::make_shared<simulation::MapCell>(nullptr),
+      std::make_shared<simulation::MapCell>(nullptr),
+  };
+  simulation::MapCell test_cell = simulation::MapCell(non_empty_bug_1, cells_refs);
+  test_cell.move_bug(cells_refs.left);
+  EXPECT_EQ(test_cell.get_bug(), nullptr);
+  EXPECT_EQ(cells_refs.left->get_bug(), non_empty_bug_1);
 }
 
 

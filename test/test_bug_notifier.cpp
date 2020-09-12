@@ -8,17 +8,17 @@
 
 class TestableObserver : public simulation::BugObserver {
   public:
-    bool _on_bug_born_called;
-    bool _on_bug_died_called;
+    bool on_bug_born_called_;
+    bool on_bug_died_called_;
 
-    TestableObserver() : _on_bug_born_called(false), _on_bug_died_called(false) {}
+    TestableObserver() : on_bug_born_called_(false), on_bug_died_called_(false) {}
   
     void on_bug_born(std::shared_ptr<simulation::Bug>) {
-      _on_bug_born_called = true;
+      on_bug_born_called_ = true;
     };
 
     void on_bug_died(std::shared_ptr<simulation::Bug>) {
-      _on_bug_died_called = true;
+      on_bug_died_called_ = true;
     };
 };
 
@@ -27,7 +27,7 @@ TEST(BugNotifier, NotifyBirth_SuccessfullyNotifiesBirth) {
   std::shared_ptr<simulation::BugObserver> testable_observer = std::make_shared<TestableObserver>();
   test_notifier.add_observer(testable_observer);
   test_notifier.notify_birth(std::shared_ptr<simulation::Bug>{});
-  EXPECT_TRUE(std::dynamic_pointer_cast<TestableObserver>(testable_observer)->_on_bug_born_called);
+  EXPECT_TRUE(std::dynamic_pointer_cast<TestableObserver>(testable_observer)->on_bug_born_called_);
 }
 
 
@@ -36,8 +36,8 @@ TEST(BugNotifier, NotifyDeath_SuccessfullyNotifiesDeath) {
   std::shared_ptr<simulation::BugObserver> testable_observer = std::make_shared<TestableObserver>();
   test_notifier.add_observer(testable_observer);
   test_notifier.notify_death(std::shared_ptr<simulation::Bug>{});
-  EXPECT_FALSE(std::dynamic_pointer_cast<TestableObserver>(testable_observer)->_on_bug_born_called);
-  EXPECT_TRUE(std::dynamic_pointer_cast<TestableObserver>(testable_observer)->_on_bug_died_called);
+  EXPECT_FALSE(std::dynamic_pointer_cast<TestableObserver>(testable_observer)->on_bug_born_called_);
+  EXPECT_TRUE(std::dynamic_pointer_cast<TestableObserver>(testable_observer)->on_bug_died_called_);
 }
 
 TEST(BugNotifier, RemoveObserver_UnregisterdObserverDoesNotReceiveEvents) {
@@ -46,8 +46,8 @@ TEST(BugNotifier, RemoveObserver_UnregisterdObserverDoesNotReceiveEvents) {
   test_notifier.add_observer(testable_observer);
   test_notifier.remove_observer(testable_observer);
   test_notifier.notify_death(std::shared_ptr<simulation::Bug>{});
-  EXPECT_FALSE(std::dynamic_pointer_cast<TestableObserver>(testable_observer)->_on_bug_born_called);
-  EXPECT_FALSE(std::dynamic_pointer_cast<TestableObserver>(testable_observer)->_on_bug_died_called);
+  EXPECT_FALSE(std::dynamic_pointer_cast<TestableObserver>(testable_observer)->on_bug_born_called_);
+  EXPECT_FALSE(std::dynamic_pointer_cast<TestableObserver>(testable_observer)->on_bug_died_called_);
 }
 
 

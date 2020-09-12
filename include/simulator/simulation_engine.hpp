@@ -18,7 +18,7 @@ constexpr uint8_t DOODLEBUGS_INIT_NUMBER = 5;
  */
 class SimulationEngine : BugObserver {
  private:
-  const SimulationMap _map;
+  const SimulationMap map_;
 
  public:
   SimulationEngine();

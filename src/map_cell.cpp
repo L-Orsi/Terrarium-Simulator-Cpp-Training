@@ -7,28 +7,46 @@
 namespace simulation
 {
 
-MapCell::MapCell(const std::shared_ptr<Bug> bug, const AdyacentCellsReference& c_ref) 
-  : _bug(bug), _adyacent_cells{c_ref.up, c_ref.left, c_ref.down, c_ref.right} {}
+MapCell::AdjacentCellsReference::AdjacentCellsReference(
+    const std::shared_ptr<MapCell> up_ref, 
+    const std::shared_ptr<MapCell> down_ref, 
+    const std::shared_ptr<MapCell> left_ref,
+    const std::shared_ptr<MapCell> right_ref): up(up_ref), down(down_ref), left(left_ref), right(right_ref) {}
+
+MapCell::AdjacentCellsReference::AdjacentCellsReference(const AdjacentCellsReference& c_ref) {
+  this->up = c_ref.up;
+  this->left = c_ref.left;
+  this->down = c_ref.down;
+  this->right = c_ref.right;
+}
+
+MapCell::MapCell(const std::shared_ptr<Bug> bug, const AdjacentCellsReference& c_ref) 
+  : bug_(bug), adjacent_cells_{c_ref.up, c_ref.left, c_ref.down, c_ref.right} {}
 
 MapCell::MapCell(const std::shared_ptr<Bug> bug) 
-  : _bug(bug), _adyacent_cells{nullptr, nullptr, nullptr, nullptr} {}
+  : bug_(bug) {}
 
 std::shared_ptr<Bug> MapCell::get_bug() const {
-  return _bug;
+  return bug_;
 }
 
 void MapCell::set_bug(const std::shared_ptr<Bug> bug) {
-  _bug = bug;
+  bug_ = bug;
 }
 
-const std::array<const std::shared_ptr<MapCell>, ADYACENT_CELLS>& MapCell::get_adyacents() const {
-  return _adyacent_cells;
+void MapCell::move_bug(const std::shared_ptr<MapCell> destination) {
+  destination->set_bug(bug_);
+  bug_ = nullptr;
 }
 
-const std::shared_ptr<MapCell> MapCell::get_free_adyacent() const {
-  for (auto adyacent_cell : _adyacent_cells) {
-    if(!adyacent_cell->get_bug()){
-      return adyacent_cell;
+const std::array<const std::shared_ptr<MapCell>, ADJACENT_CELLS>& MapCell::get_adjacents() const {
+  return adjacent_cells_;
+}
+
+const std::shared_ptr<MapCell> MapCell::get_free_adjacent() const {
+  for (auto adjacent_cell : adjacent_cells_) {
+    if(!adjacent_cell->get_bug()){
+      return adjacent_cell;
     }
   }
   return nullptr;

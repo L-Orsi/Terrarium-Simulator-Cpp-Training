@@ -19,21 +19,21 @@ class MapCell; // Forward declaration.
  *  <li> `Die`, if the starves or it is eaten by a predator.
  * </ol>
  * 
- * <p>This clas inherits from BugNotifier class, which allows observer classes to register
+ * <p>This class inherits from BugNotifier class, which allows observer classes to register
  *    to bug events.
  */
 class Bug : public BugNotifier {
  private:    
   /** References. */
-  std::shared_ptr<MapCell> _cell;
+  std::shared_ptr<MapCell> cell_;
 
   /** Lifecycle counters. */
-  uint16_t _breed_counter = 0;
-  uint16_t _starve_counter = 0;
+  uint16_t breed_counter_ = 0;
+  uint16_t starve_counter_ = 0;
 
   /** Lifecycle flags. */
-  bool _is_prey;
-  bool _is_alive = true;
+  bool is_prey_;
+  bool is_alive_ = true;
 
  public:
   /** Default values. */
@@ -68,18 +68,18 @@ class Bug : public BugNotifier {
    */
   void get_eaten();
 
-  /** Marks a prey in an adyacent cell as dead and moves to its place. If there's no prey, it just moves.
+  /** Marks a prey in an adjacent cell as dead and moves to its place. If there's no prey, it just moves.
    * 
    * <p>This action resets the #_starve_counter if a prey is eaten. 
    */
   void eat_move();
 
-  /** Moves to a free adyacent cell. */
+  /** Moves to a free adjacent cell. */
   void move();
 
-  /** Breeds to a free adyacent cell.
+  /** Breeds to a free adjacent cell.
    * 
-   * <p>If no adyacent cell is free, breeding is postponed until there's room to do so.
+   * <p>If no adjacent cell is free, breeding is postponed until there's room to do so.
    * 
    * <p>Breeding resets the breed counter.
    */

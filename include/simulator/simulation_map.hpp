@@ -19,7 +19,7 @@ constexpr uint16_t CELLS_TOTAL = ROWS_DEFAULT * COLS_DEFAULT;
  */
 class SimulationMap {
  private:
-  std::array<const std::shared_ptr<MapCell>, CELLS_TOTAL> _cells;
+  std::array<const std::shared_ptr<MapCell>, CELLS_TOTAL> cells_;
 
  public:
   /** Creates the map where the simulation will be run. 
