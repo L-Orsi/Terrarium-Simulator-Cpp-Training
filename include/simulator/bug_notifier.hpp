@@ -1,5 +1,5 @@
 #pragma once
-#include <set>
+#include <unordered_set>
 #include <memory>
 
 #include "bug_observer.hpp"
@@ -17,7 +17,7 @@ class Bug;  // Forward declaration.
  */
 class BugNotifier {
  private:
-  std::set<std::shared_ptr<BugObserver>> observers_;
+  std::unordered_set<BugObserver*> observers_;
 
  public:
   /** Creates an instance of a bug notifier. */
@@ -27,13 +27,13 @@ class BugNotifier {
    *
    * <p>Adding twice the same observer has no effect.
    */
-  void add_observer(std::shared_ptr<BugObserver> observer);
+  void add_observer(BugObserver* observer);
 
   /** Removes an observer so that it is no longer notified of bug events.
    *
    * <p>Removing a non existent observer has no effect.
   */
-  void remove_observer(std::shared_ptr<BugObserver> observer);
+  void remove_observer(BugObserver* observer);
 
   /** Notifies observer of bug birth.
    * @param newborn_bug reference to the newborn insect.
