@@ -47,8 +47,9 @@ add_executable(main
     src/bug.cpp
     src/bug_notifier.cpp
     src/map_cell.cpp
-    src/simulation_engine.cpp
     src/simulation_map.cpp
+    src/simulation_engine.cpp
+    src/bug_descriptor.cpp
 )
 
 add_subdirectory("test")
