@@ -24,7 +24,7 @@ namespace simulation
   }
 
   void BugNotifier::notify_death(std::shared_ptr<Bug> dead_bug) {
-    for(auto observer : observers_) {
+    for(const auto& observer : observers_) {
       observer->on_bug_died(dead_bug);
     }
   }

@@ -67,9 +67,7 @@ class Bug : public BugNotifier {
   std::string get_name() const;
 
   /** Gets the cell where the bug is at. */
-  std::shared_ptr<MapCell> get_cell() {
-    return cell_;
-  }
+  std::shared_ptr<MapCell> get_cell() const;
 
   void reset_turn();
 

@@ -5,6 +5,7 @@
 #include <memory>
 
 #include "simulation_map.hpp"
+#include "bug_descriptor.hpp"
 #include "bug_observer.hpp"
 
 namespace simulation {

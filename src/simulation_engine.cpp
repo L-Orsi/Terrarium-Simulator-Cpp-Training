@@ -7,6 +7,7 @@
 
 #include <simulator/simulation_engine.hpp>
 #include <simulator/simulation_map.hpp>
+#include <simulator/bug_descriptor.hpp>
 #include <simulator/bug.hpp>
 
 namespace simulation {
@@ -14,17 +15,21 @@ namespace simulation {
 const uint16_t ANTS = 10;
 const uint16_t DOODLEBUGS = 3;
 
+uint16_t n_rounds_ = 0;
+
 SimulationEngine::SimulationEngine(): map_(std::make_shared<SimulationMap>()){}
 
 void SimulationEngine::start_simulation(uint16_t n_rounds) {
-  for(;n_rounds && simulate_round();n_rounds--);
+
+  // Simulates rounds until either n_rounds are over or only specimens of one specie are left.
+  for(n_rounds_=n_rounds;n_rounds_ && simulate_round();n_rounds_--);
 }
 
 bool SimulationEngine::simulate_round() {
   uint16_t species_left = 0;
   std::cout << "--------" << std::endl;
-  std::cout << "[SimulationEngine] New Round" << std::endl;
-    map_->print_map();
+  std::cout << "[SimulationEngine] Round: " << n_rounds_ << std::endl;
+  map_->print_map();
   
   // Iterates over cells and makes every bug move/breed/eat/starve accordingly.
   for(auto cell: map_->get_cells()) {
@@ -69,12 +74,16 @@ void SimulationEngine::populate_map_with_species() {
     for(auto i=0; i<ANTS; i++) {
       (*cells_it)->set_bug(std::make_shared<Bug>(*cells_it, BugDescriptorDatabase::get_ant_descriptor()));
       (*cells_it)->get_bug()->add_observer(this);
-      cells_it++;
+      if(++cells_it == cells.end()) {
+        return;
+      };
     }
     for(auto j=0; j<DOODLEBUGS; j++) {
       (*cells_it)->set_bug(std::make_shared<Bug>(*cells_it, BugDescriptorDatabase::get_doodlebug_descriptor()));
       (*cells_it)->get_bug()->add_observer(this);
-      cells_it++;
+      if(++cells_it == cells.end()) {
+        return;
+      }
     }
 }
 

@@ -26,7 +26,7 @@ SimulationMap::SimulationMap(uint8_t rows, uint8_t cols): rows_(rows), cols_(col
   }
 }
 
-std::vector<std::shared_ptr<MapCell>>& SimulationMap::get_cells() {
+MapCellReferences& SimulationMap::get_cells() {
   return cells_;
 }
 

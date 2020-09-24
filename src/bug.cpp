@@ -17,6 +17,9 @@ namespace simulation
    : cell_(cell), rounds_to_breed_(rounds_to_breed), 
      rounds_to_starve_(rounds_to_starve), is_prey_(!is_predator),name_(name) {}
 
+  std::shared_ptr<MapCell> Bug::get_cell() const {
+    return cell_;
+  }
 
   bool Bug::is_dead() const {
     return !is_alive_;

@@ -8,6 +8,8 @@
 
 namespace simulation {
 
+using MapCellReferences = std::vector<std::shared_ptr<MapCell>>;
+
 /* Map default dimensions. */
 constexpr uint8_t ROWS_DEFAULT = 9;
 constexpr uint8_t COLS_DEFAULT = 9;
@@ -21,7 +23,7 @@ class SimulationMap {
  private:
   const uint8_t rows_;
   const uint8_t cols_;
-  std::vector<std::shared_ptr<MapCell>> cells_;
+  MapCellReferences cells_;
 
  public:
   /** Creates the map where the simulation will be run. 
@@ -36,7 +38,7 @@ class SimulationMap {
   void print_map();
   
   /** Gets all the cells in the map. */
-  std::vector<std::shared_ptr<MapCell>>& get_cells();
+  MapCellReferences& get_cells();
 };
 
 } // namespace: simulation

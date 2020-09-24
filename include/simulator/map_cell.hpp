@@ -62,7 +62,7 @@ class MapCell {
   void set_bug(const std::shared_ptr<Bug> bug);
 
   /** Gets an array of adyacent cells to this cell. */
-  std::array<std::shared_ptr<MapCell>, ADJACENT_CELLS>& get_adjacents();
+  const std::array<std::shared_ptr<MapCell>, ADJACENT_CELLS>& get_adjacents() const;
 
   /** Moves the bug occupying this cell to another one. 
    * 
@@ -74,7 +74,7 @@ class MapCell {
   void move_bug(const std::shared_ptr<MapCell> destination);
 
   /** Gets a free adjacent cell if any. */
-  const std::shared_ptr<MapCell> get_free_adjacent();
+  const std::shared_ptr<MapCell> get_free_adjacent() const;
 
 private:
 

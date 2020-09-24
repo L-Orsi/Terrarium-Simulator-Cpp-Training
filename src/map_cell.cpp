@@ -39,11 +39,11 @@ void MapCell::move_bug(const std::shared_ptr<MapCell> destination) {
   bug_ = nullptr;
 }
 
-std::array<std::shared_ptr<MapCell>, ADJACENT_CELLS>& MapCell::get_adjacents() {
+const std::array<std::shared_ptr<MapCell>, ADJACENT_CELLS>& MapCell::get_adjacents() const {
   return adjacent_cells_;
 }
 
-const std::shared_ptr<MapCell> MapCell::get_free_adjacent() {
+const std::shared_ptr<MapCell> MapCell::get_free_adjacent() const {
   for (auto adjacent_cell : adjacent_cells_) {
     if(adjacent_cell && !adjacent_cell->get_bug()){
       return adjacent_cell;
