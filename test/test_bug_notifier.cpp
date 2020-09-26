@@ -20,7 +20,7 @@ TEST(BugNotifier, NotifyBirth_SuccessfullyNotifiesBirth) {
   test_notifier.notify_birth(test_bug);
 }
 
-TEST(BugNotifier, NotifyBirth_SuccessfullyNotifiesDeath) {
+TEST(BugNotifier, NotifyDeath_SuccessfullyNotifiesDeath) {
   simulation::BugNotifier test_notifier = simulation::BugNotifier();
   std::shared_ptr<simulation::Bug> test_bug{};
   BugObserverMock testable_observer;
@@ -42,5 +42,4 @@ TEST(BugNotifier, RemoveObserver_UnregisterdObserverDoesNotReceiveEvents) {
   test_notifier.remove_observer(&testable_observer);
   test_notifier.notify_death(test_bug);
 }
-
 
