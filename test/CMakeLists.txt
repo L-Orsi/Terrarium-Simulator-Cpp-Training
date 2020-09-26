@@ -4,6 +4,7 @@ set(PROJECT_TEST_SRCS
   test_bug.cpp
   test_bug_notifier.cpp
   test_map_cell.cpp
+  test_simulation_map.cpp
 )
 
 enable_testing()
@@ -15,6 +16,7 @@ add_executable(${PROJECT_NAME}_test
     ../src/map_cell.cpp
     ../src/simulation_engine.cpp
     ../src/simulation_map.cpp
+    ../src/bug_descriptor.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}_test
