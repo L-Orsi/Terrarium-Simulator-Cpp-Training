@@ -6,6 +6,7 @@
 namespace simulation {
 
 class Bug; // Forward declaration.
+class SimulationMap; // Forward declaration.
 
 /* Number of adjacent cells a single cell has. */
 constexpr uint8_t ADJACENT_CELLS = 4; // Up, Right, Left, Down.
@@ -14,23 +15,23 @@ constexpr uint8_t ADJACENT_CELLS = 4; // Up, Right, Left, Down.
 class MapCell {
  private:
   std::shared_ptr<Bug> bug_;
-  std::array<const std::shared_ptr<MapCell>, ADJACENT_CELLS> adjacent_cells_;
+  std::array<std::shared_ptr<MapCell>, ADJACENT_CELLS> adjacent_cells_;
 
  public:
   /** Helper class to hold adjacent cells references of a single cell. 
    * Pointers contained by this class may be null, which means that there's no adjacent cell in that direction.
    */
   struct AdjacentCellsReference {
-    std::shared_ptr<MapCell> up = nullptr;
-    std::shared_ptr<MapCell> down = nullptr;
-    std::shared_ptr<MapCell> left = nullptr;
     std::shared_ptr<MapCell> right = nullptr;
+    std::shared_ptr<MapCell> up = nullptr;
+    std::shared_ptr<MapCell> left = nullptr;
+    std::shared_ptr<MapCell> down = nullptr;
 
     AdjacentCellsReference(
+      const std::shared_ptr<MapCell> right, 
       const std::shared_ptr<MapCell> up, 
-      const std::shared_ptr<MapCell> down, 
       const std::shared_ptr<MapCell> left,
-      const std::shared_ptr<MapCell> right);
+      const std::shared_ptr<MapCell> down);
   
     AdjacentCellsReference(const AdjacentCellsReference& adjacent_cells_reference);
   };
@@ -60,6 +61,9 @@ class MapCell {
    */
   void set_bug(const std::shared_ptr<Bug> bug);
 
+  /** Gets an array of adyacent cells to this cell. */
+  const std::array<std::shared_ptr<MapCell>, ADJACENT_CELLS>& get_adjacents() const;
+
   /** Moves the bug occupying this cell to another one. 
    * 
    * <p> This method replaces destination's bug for the one held by this class' instance. 
@@ -69,11 +73,14 @@ class MapCell {
   */
   void move_bug(const std::shared_ptr<MapCell> destination);
 
-  /** Gets an array of adjacent cells to this cell. */
-  const std::array<const std::shared_ptr<MapCell>, ADJACENT_CELLS>& get_adjacents() const;
-
   /** Gets a free adjacent cell if any. */
   const std::shared_ptr<MapCell> get_free_adjacent() const;
+
+private:
+
+  friend class SimulationMap;
+  /** Sets adyacent cells. */
+  void set_adjacents(const AdjacentCellsReference& adjacent_cells);
 
 };
 

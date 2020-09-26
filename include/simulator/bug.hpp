@@ -6,11 +6,13 @@
 #include "map_cell.hpp"
 #include "bug_notifier.hpp"
 #include "bug_observer.hpp"
+#include "bug_descriptor.hpp"
 
 namespace simulation
 {
 
 class MapCell; // Forward declaration.
+class BugDescriptor; // Forward declaration.
 
 /** A bug, which can perform the following actions:
  * <ol>
@@ -27,6 +29,11 @@ class Bug : public BugNotifier {
   /** References. */
   std::shared_ptr<MapCell> cell_;
 
+  /** Lifecycle constants. */
+  uint16_t rounds_to_breed_;
+  uint16_t rounds_to_starve_;
+  bool _played = false;
+
   /** Lifecycle counters. */
   uint16_t breed_counter_ = 0;
   uint16_t starve_counter_ = 0;
@@ -35,16 +42,36 @@ class Bug : public BugNotifier {
   bool is_prey_;
   bool is_alive_ = true;
 
+  /** Name. */
+  std::string name_;
+
  public:
   /** Default values. */
-  const uint8_t DEFAULT_ROUNDS_TO_BREED = 3;
-  const uint8_t DEFAULT_ROUNDS_TO_STARVE = 3;
+  static const uint16_t DEFAULT_ROUNDS_TO_BREED = 3;
+  static const uint16_t DEFAULT_ROUNDS_TO_STARVE = 3;
     
   /** Creates a Bug.
    * @param cell map cell where the bug will be placed.
    * @param is_predator whether the bug is a prey or a predator.
    */
-  Bug(std::shared_ptr<MapCell> cell, const bool is_predator=false);
+    /** Creates a Bug based on a descriptor's specifications. */
+  Bug(std::shared_ptr<MapCell> cell, const bool is_predator=false, 
+    const uint16_t rounds_to_breed=DEFAULT_ROUNDS_TO_STARVE,
+    const uint16_t rounds_to_starve=DEFAULT_ROUNDS_TO_STARVE,
+    const std::string name="GenericBug");
+
+  /** Creates a Bug based on a descriptor's specifications. */
+  Bug(std::shared_ptr<MapCell> cell, const BugDescriptor& bug_descriptor);
+
+  /** Gets the bug name. */
+  std::string get_name() const;
+
+  /** Gets the cell where the bug is at. */
+  std::shared_ptr<MapCell> get_cell() const;
+
+  void reset_turn();
+
+  bool has_played() const;
 
   /** Returns true if the bug is dead. */
   bool is_dead() const;
@@ -60,7 +87,7 @@ class Bug : public BugNotifier {
    *   <li> starve (if it spent too many rounds without eating being a predator).
    * </ol>
    */
-  void play_round() const;
+  void play_round();
 
   /** Get eaten (by a predator).
    * 
@@ -74,7 +101,10 @@ class Bug : public BugNotifier {
    */
   void eat_move();
 
-  /** Moves to a free adjacent cell. */
+  /** Starves if bug hasn't eaten after a fixed amount of rounds, unless it can't starve. */
+  void starve();
+
+  /** Moves to a free adyacent cell. */
   void move();
 
   /** Breeds to a free adjacent cell.
@@ -97,12 +127,12 @@ class Bug : public BugNotifier {
  protected: 
 
   /** Gets the amount of rounds that are needed for this bug to breed. */
-  uint8_t get_rounds_to_breed() const;
+  uint16_t get_rounds_to_breed() const;
 
   /** Gets the number of rounds that are needed for this bug to starve (die) if it doesn't eat_move. 
    * <p> This method may return 0, which means that the bug cannot starve.
    */
-  uint8_t get_rounds_to_starve() const;
+  uint16_t get_rounds_to_starve() const;
 };
 
 } // namespace: simulation
